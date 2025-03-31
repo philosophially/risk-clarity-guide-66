@@ -62,7 +62,7 @@ export const issuesData = [
     location: 'Section 9 - Indemnification',
     riskLevel: 'low',
     summary: 'The indemnification clause is narrowly defined and may not fully protect our interests in all potential scenarios.',
-    playbookPosition: 'Indemnification should explicitly cover data breaches, privacy violations, and regulatory penalties resulting from Service Provider's actions. Expand indemnification scope to include these scenarios and ensure vendor assumes responsibility for regulatory compliance failures.'
+    playbookPosition: 'Indemnification should explicitly cover data breaches, privacy violations, and regulatory penalties resulting from Service Provider\'s actions. Expand indemnification scope to include these scenarios and ensure vendor assumes responsibility for regulatory compliance failures.'
   },
   {
     id: 'issue-9',
