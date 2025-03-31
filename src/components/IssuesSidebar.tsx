@@ -66,6 +66,11 @@ const IssueCard: React.FC<IssueCardProps> = ({
     setIsExpanded(!isExpanded);
   };
 
+  const handleIssueClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClick(issue.id);
+  };
+
   return (
     <Card 
       className={`mb-3 overflow-hidden border-l-4 ${
@@ -90,10 +95,7 @@ const IssueCard: React.FC<IssueCardProps> = ({
               <div>
                 <h3 
                   className="font-medium text-sm hover:text-blue-600"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onClick(issue.id);
-                  }}
+                  onClick={handleIssueClick}
                 >
                   {issue.title}
                 </h3>
@@ -104,9 +106,7 @@ const IssueCard: React.FC<IssueCardProps> = ({
                   {issue.riskLevel === 'high' ? 'High Risk' : issue.riskLevel === 'medium' ? 'Medium Risk' : 'Low Risk'}
                 </span>
                 {isResolved && <Check size={16} className="text-green-600" />}
-                {isResolved ? 
-                  (isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />) : null
-                }
+                {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
               </div>
             </div>
           </CollapsibleTrigger>

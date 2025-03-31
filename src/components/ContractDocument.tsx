@@ -1,6 +1,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import { contractContent } from '../data/contractData';
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ContractDocumentProps {
   activeIssueId: string | null;
@@ -14,14 +15,13 @@ const ContractDocument: React.FC<ContractDocumentProps> = ({ activeIssueId, hove
     if (activeIssueId && containerRef.current) {
       const element = document.getElementById(activeIssueId);
       if (element) {
-        // Scroll to the element with some padding
-        const yOffset = -80; 
-        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        
-        containerRef.current.scrollTo({
-          top: y - containerRef.current.offsetTop,
-          behavior: 'smooth'
-        });
+        // Using setTimeout to ensure the scroll happens after render
+        setTimeout(() => {
+          if (containerRef.current) {
+            const elementTop = element.offsetTop;
+            containerRef.current.scrollTop = elementTop - 100; // Add some padding at the top
+          }
+        }, 100);
       }
     }
   }, [activeIssueId]);
@@ -36,54 +36,59 @@ const ContractDocument: React.FC<ContractDocumentProps> = ({ activeIssueId, hove
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-8 h-full overflow-y-auto" ref={containerRef}>
-      <div className="max-w-3xl mx-auto contract-content">
-        <h1 className="text-2xl font-bold mb-6 text-slate-900">MASTER SERVICES AGREEMENT</h1>
-        
-        {/* Render the contract content from the data */}
-        {contractContent.map((section) => (
-          <div key={section.id} className="mb-8">
-            <h2>{section.title}</h2>
-            {section.content.map((item, index) => {
-              if (item.type === 'paragraph') {
-                if (item.issueId) {
+    <div className="bg-white rounded-lg shadow-md h-full overflow-hidden">
+      <div 
+        className="h-full overflow-y-auto p-8" 
+        ref={containerRef}
+      >
+        <div className="max-w-3xl mx-auto contract-content">
+          <h1 className="text-2xl font-bold mb-6 text-slate-900">MASTER SERVICES AGREEMENT</h1>
+          
+          {/* Render the contract content from the data */}
+          {contractContent.map((section) => (
+            <div key={section.id} className="mb-8">
+              <h2>{section.title}</h2>
+              {section.content.map((item, index) => {
+                if (item.type === 'paragraph') {
+                  if (item.issueId) {
+                    return (
+                      <p 
+                        key={index} 
+                        id={item.issueId} 
+                        className={getHighlightClass(item.issueId, item.riskLevel)}
+                      >
+                        {item.text}
+                      </p>
+                    );
+                  }
+                  return <p key={index}>{item.text}</p>;
+                } else if (item.type === 'list') {
                   return (
-                    <p 
-                      key={index} 
-                      id={item.issueId} 
-                      className={getHighlightClass(item.issueId, item.riskLevel)}
-                    >
-                      {item.text}
-                    </p>
+                    <ol key={index}>
+                      {item.items.map((listItem, listIndex) => {
+                        if (listItem.issueId) {
+                          return (
+                            <li 
+                              key={listIndex}
+                              id={listItem.issueId}
+                              className={getHighlightClass(listItem.issueId, listItem.riskLevel)}
+                            >
+                              {listItem.text}
+                            </li>
+                          );
+                        }
+                        return <li key={listIndex}>{listItem.text}</li>;
+                      })}
+                    </ol>
                   );
+                } else if (item.type === 'heading') {
+                  return <h3 key={index}>{item.text}</h3>;
                 }
-                return <p key={index}>{item.text}</p>;
-              } else if (item.type === 'list') {
-                return (
-                  <ol key={index}>
-                    {item.items.map((listItem, listIndex) => {
-                      if (listItem.issueId) {
-                        return (
-                          <li 
-                            key={listIndex}
-                            id={listItem.issueId}
-                            className={getHighlightClass(listItem.issueId, listItem.riskLevel)}
-                          >
-                            {listItem.text}
-                          </li>
-                        );
-                      }
-                      return <li key={listIndex}>{listItem.text}</li>;
-                    })}
-                  </ol>
-                );
-              } else if (item.type === 'heading') {
-                return <h3 key={index}>{item.text}</h3>;
-              }
-              return null;
-            })}
-          </div>
-        ))}
+                return null;
+              })}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
