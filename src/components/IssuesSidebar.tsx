@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { issuesData } from '../data/issuesData';
-import { ThumbsUp, ThumbsDown, Play, Check } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Play, Check, ChevronDown, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -11,6 +11,7 @@ import {
   AccordionItem, 
   AccordionTrigger 
 } from '@/components/ui/accordion';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface IssueCardProps {
   issue: typeof issuesData[0];
@@ -29,9 +30,11 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, activeIssueId, on
   const [thumbsUpActive, setThumbsUpActive] = useState(false);
   const [thumbsDownActive, setThumbsDownActive] = useState(false);
   const [playbookVisible, setPlaybookVisible] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(!isResolved);
   
   const handleResolve = () => {
     onResolve(issue.id, true);
+    setIsExpanded(false);
   };
 
   const handleThumbsUp = () => {
@@ -48,6 +51,10 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, activeIssueId, on
     setPlaybookVisible(!playbookVisible);
   };
 
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <Card 
       className={`mb-3 overflow-hidden border-l-4 ${
@@ -60,73 +67,91 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, activeIssueId, on
             : 'border-l-green-500'
       }`}
     >
-      <div className="p-4">
-        <div className="flex justify-between items-start mb-2">
-          <div>
-            <h3 
-              className="font-medium text-sm cursor-pointer hover:text-blue-600"
-              onClick={() => onClick(issue.id)}
-            >
-              {issue.title}
-            </h3>
-            <p className="text-xs text-slate-500">{issue.location}</p>
-          </div>
-          <span className={`risk-badge-${issue.riskLevel}`}>
-            {issue.riskLevel === 'high' ? 'High Risk' : issue.riskLevel === 'medium' ? 'Medium Risk' : 'Low Risk'}
-          </span>
-        </div>
-
-        <p className="text-sm text-slate-700 mb-3">{issue.summary}</p>
-
-        {isResolved ? (
-          <div className="bg-green-50 border border-green-200 p-2 rounded text-sm text-green-800 flex items-center">
-            <Check size={16} className="mr-2" />
-            Issue resolved by John Smith
-          </div>
-        ) : (
-          <>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex gap-2">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className={`p-1 h-8 w-8 ${thumbsUpActive ? 'bg-green-100 text-green-700' : ''}`}
-                  onClick={handleThumbsUp}
+      <Collapsible 
+        open={isExpanded} 
+        onOpenChange={setIsExpanded}
+      >
+        <div className="p-4">
+          <CollapsibleTrigger asChild>
+            <div className="flex justify-between items-start mb-2 cursor-pointer">
+              <div>
+                <h3 
+                  className="font-medium text-sm hover:text-blue-600"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClick(issue.id);
+                  }}
                 >
-                  <ThumbsUp size={16} />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className={`p-1 h-8 w-8 ${thumbsDownActive ? 'bg-red-100 text-red-700' : ''}`}
-                  onClick={handleThumbsDown}
-                >
-                  <ThumbsDown size={16} />
-                </Button>
+                  {issue.title}
+                </h3>
+                <p className="text-xs text-slate-500">{issue.location}</p>
               </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="text-xs h-8"
-                onClick={handleResolve}
-              >
-                Resolve
-              </Button>
+              <div className="flex items-center gap-2">
+                <span className={`risk-badge-${issue.riskLevel}`}>
+                  {issue.riskLevel === 'high' ? 'High Risk' : issue.riskLevel === 'medium' ? 'Medium Risk' : 'Low Risk'}
+                </span>
+                {isResolved && <Check size={16} className="text-green-600" />}
+                {isResolved ? 
+                  (isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />) : null
+                }
+              </div>
             </div>
+          </CollapsibleTrigger>
+          
+          <CollapsibleContent>
+            <p className="text-sm text-slate-700 mb-3">{issue.summary}</p>
 
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="playbook" className="border-0">
-                <AccordionTrigger className="py-1 text-xs text-blue-600 hover:text-blue-800 hover:no-underline">
-                  Playbook position
-                </AccordionTrigger>
-                <AccordionContent className="text-xs bg-blue-50 p-2 rounded border border-blue-100">
-                  {issue.playbookPosition}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </>
-        )}
-      </div>
+            {isResolved ? (
+              <div className="bg-green-50 border border-green-200 p-2 rounded text-sm text-green-800 flex items-center">
+                <Check size={16} className="mr-2" />
+                Issue resolved by John Smith
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className={`p-1 h-8 w-8 ${thumbsUpActive ? 'bg-green-100 text-green-700' : ''}`}
+                      onClick={handleThumbsUp}
+                    >
+                      <ThumbsUp size={16} />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className={`p-1 h-8 w-8 ${thumbsDownActive ? 'bg-red-100 text-red-700' : ''}`}
+                      onClick={handleThumbsDown}
+                    >
+                      <ThumbsDown size={16} />
+                    </Button>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="text-xs h-8"
+                    onClick={handleResolve}
+                  >
+                    Resolve
+                  </Button>
+                </div>
+
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="playbook" className="border-0">
+                    <AccordionTrigger className="py-1 text-xs text-blue-600 hover:text-blue-800 hover:no-underline">
+                      Playbook position
+                    </AccordionTrigger>
+                    <AccordionContent className="text-xs bg-blue-50 p-2 rounded border border-blue-100">
+                      {issue.playbookPosition}
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </>
+            )}
+          </CollapsibleContent>
+        </div>
+      </Collapsible>
     </Card>
   );
 };
