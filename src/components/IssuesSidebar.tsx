@@ -16,6 +16,8 @@ interface IssueCardProps {
   issue: typeof issuesData[0];
   onClick: (issueId: string) => void;
   activeIssueId: string | null;
+  onResolve: (issueId: string, resolved: boolean) => void;
+  isResolved: boolean;
 }
 
 interface IssuesSidebarProps {
@@ -23,14 +25,13 @@ interface IssuesSidebarProps {
   activeIssueId: string | null;
 }
 
-const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, activeIssueId }) => {
-  const [isResolved, setIsResolved] = useState(false);
+const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, activeIssueId, onResolve, isResolved }) => {
   const [thumbsUpActive, setThumbsUpActive] = useState(false);
   const [thumbsDownActive, setThumbsDownActive] = useState(false);
   const [playbookVisible, setPlaybookVisible] = useState(false);
   
   const handleResolve = () => {
-    setIsResolved(true);
+    onResolve(issue.id, true);
   };
 
   const handleThumbsUp = () => {
@@ -131,6 +132,18 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, activeIssueId }) 
 };
 
 const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssueId }) => {
+  // Track resolved issues
+  const [resolvedIssues, setResolvedIssues] = useState<string[]>([]);
+
+  // Handler for resolving/unresolving issues
+  const handleResolveIssue = (issueId: string, resolved: boolean) => {
+    if (resolved) {
+      setResolvedIssues(prev => [...prev, issueId]);
+    } else {
+      setResolvedIssues(prev => prev.filter(id => id !== issueId));
+    }
+  };
+
   // Group issues by risk level
   const highRiskIssues = issuesData.filter(issue => issue.riskLevel === 'high');
   const mediumRiskIssues = issuesData.filter(issue => issue.riskLevel === 'medium');
@@ -141,7 +154,7 @@ const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssue
       <div className="bg-slate-800 p-4 text-white">
         <h2 className="text-lg font-semibold">Contract Issues</h2>
         <p className="text-sm text-slate-300">
-          {issuesData.length} issues identified in this document
+          {issuesData.length} issues identified in this document, {resolvedIssues.length} resolved
         </p>
       </div>
       
@@ -155,6 +168,8 @@ const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssue
                 issue={issue} 
                 onClick={onIssueClick}
                 activeIssueId={activeIssueId}
+                onResolve={handleResolveIssue}
+                isResolved={resolvedIssues.includes(issue.id)}
               />
             ))}
           </div>
@@ -169,6 +184,8 @@ const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssue
                 issue={issue} 
                 onClick={onIssueClick}
                 activeIssueId={activeIssueId}
+                onResolve={handleResolveIssue}
+                isResolved={resolvedIssues.includes(issue.id)}
               />
             ))}
           </div>
@@ -183,6 +200,8 @@ const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssue
                 issue={issue} 
                 onClick={onIssueClick}
                 activeIssueId={activeIssueId}
+                onResolve={handleResolveIssue}
+                isResolved={resolvedIssues.includes(issue.id)}
               />
             ))}
           </div>
