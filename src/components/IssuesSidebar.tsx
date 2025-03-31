@@ -19,14 +19,25 @@ interface IssueCardProps {
   activeIssueId: string | null;
   onResolve: (issueId: string, resolved: boolean) => void;
   isResolved: boolean;
+  onMouseEnter: (issueId: string) => void;
+  onMouseLeave: () => void;
 }
 
 interface IssuesSidebarProps {
   onIssueClick: (issueId: string) => void;
   activeIssueId: string | null;
+  onIssueHover: (issueId: string | null) => void;
 }
 
-const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, activeIssueId, onResolve, isResolved }) => {
+const IssueCard: React.FC<IssueCardProps> = ({ 
+  issue, 
+  onClick, 
+  activeIssueId, 
+  onResolve, 
+  isResolved,
+  onMouseEnter,
+  onMouseLeave 
+}) => {
   const [thumbsUpActive, setThumbsUpActive] = useState(false);
   const [thumbsDownActive, setThumbsDownActive] = useState(false);
   const [playbookVisible, setPlaybookVisible] = useState(false);
@@ -66,6 +77,8 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, activeIssueId, on
             ? 'border-l-orange-500' 
             : 'border-l-green-500'
       }`}
+      onMouseEnter={() => onMouseEnter(issue.id)}
+      onMouseLeave={onMouseLeave}
     >
       <Collapsible 
         open={isExpanded} 
@@ -156,7 +169,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, activeIssueId, on
   );
 };
 
-const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssueId }) => {
+const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssueId, onIssueHover }) => {
   // Track resolved issues
   const [resolvedIssues, setResolvedIssues] = useState<string[]>([]);
 
@@ -195,6 +208,8 @@ const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssue
                 activeIssueId={activeIssueId}
                 onResolve={handleResolveIssue}
                 isResolved={resolvedIssues.includes(issue.id)}
+                onMouseEnter={(issueId) => onIssueHover(issueId)}
+                onMouseLeave={() => onIssueHover(null)}
               />
             ))}
           </div>
@@ -211,6 +226,8 @@ const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssue
                 activeIssueId={activeIssueId}
                 onResolve={handleResolveIssue}
                 isResolved={resolvedIssues.includes(issue.id)}
+                onMouseEnter={(issueId) => onIssueHover(issueId)}
+                onMouseLeave={() => onIssueHover(null)}
               />
             ))}
           </div>
@@ -227,6 +244,8 @@ const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssue
                 activeIssueId={activeIssueId}
                 onResolve={handleResolveIssue}
                 isResolved={resolvedIssues.includes(issue.id)}
+                onMouseEnter={(issueId) => onIssueHover(issueId)}
+                onMouseLeave={() => onIssueHover(null)}
               />
             ))}
           </div>

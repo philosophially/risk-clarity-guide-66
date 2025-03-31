@@ -4,9 +4,10 @@ import { contractContent } from '../data/contractData';
 
 interface ContractDocumentProps {
   activeIssueId: string | null;
+  hoveredIssueId: string | null;
 }
 
-const ContractDocument: React.FC<ContractDocumentProps> = ({ activeIssueId }) => {
+const ContractDocument: React.FC<ContractDocumentProps> = ({ activeIssueId, hoveredIssueId }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -25,6 +26,15 @@ const ContractDocument: React.FC<ContractDocumentProps> = ({ activeIssueId }) =>
     }
   }, [activeIssueId]);
 
+  const getHighlightClass = (issueId: string, riskLevel: string) => {
+    if (activeIssueId === issueId) {
+      return `highlight-${riskLevel}-active`;
+    } else if (hoveredIssueId === issueId) {
+      return `highlight-${riskLevel}-hover`;
+    }
+    return '';
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md p-8 h-full overflow-y-auto" ref={containerRef}>
       <div className="max-w-3xl mx-auto contract-content">
@@ -38,7 +48,11 @@ const ContractDocument: React.FC<ContractDocumentProps> = ({ activeIssueId }) =>
               if (item.type === 'paragraph') {
                 if (item.issueId) {
                   return (
-                    <p key={index} id={item.issueId} className={`highlight-${item.riskLevel}`}>
+                    <p 
+                      key={index} 
+                      id={item.issueId} 
+                      className={getHighlightClass(item.issueId, item.riskLevel)}
+                    >
                       {item.text}
                     </p>
                   );
@@ -53,7 +67,7 @@ const ContractDocument: React.FC<ContractDocumentProps> = ({ activeIssueId }) =>
                           <li 
                             key={listIndex}
                             id={listItem.issueId}
-                            className={`highlight-${listItem.riskLevel}`}
+                            className={getHighlightClass(listItem.issueId, listItem.riskLevel)}
                           >
                             {listItem.text}
                           </li>

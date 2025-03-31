@@ -64,6 +64,39 @@
   }
 }
 
+/* Base highlight styles */
+.highlight-low-hover, .highlight-medium-hover, .highlight-high-hover,
+.highlight-low-active, .highlight-medium-active, .highlight-high-active {
+  @apply border-b-2 cursor-pointer transition-all duration-200;
+}
+
+/* Hover highlight styles */
+.highlight-low-hover {
+  @apply bg-yellow-50 border-yellow-200;
+}
+
+.highlight-medium-hover {
+  @apply bg-orange-50 border-orange-200;
+}
+
+.highlight-high-hover {
+  @apply bg-red-50 border-red-200;
+}
+
+/* Active highlight styles (after click) */
+.highlight-low-active {
+  @apply bg-yellow-100 border-yellow-300 font-medium;
+}
+
+.highlight-medium-active {
+  @apply bg-orange-100 border-orange-300 font-medium;
+}
+
+.highlight-high-active {
+  @apply bg-red-100 border-red-300 font-medium;
+}
+
+/* Old highlight classes for backward compatibility */
 .highlight-low {
   @apply bg-yellow-100 border-b-2 border-yellow-300 cursor-pointer;
 }

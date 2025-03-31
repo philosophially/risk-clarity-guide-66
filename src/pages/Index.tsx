@@ -5,9 +5,14 @@ import IssuesSidebar from '@/components/IssuesSidebar';
 
 const ContractReviewPage: React.FC = () => {
   const [activeIssueId, setActiveIssueId] = useState<string | null>(null);
+  const [hoveredIssueId, setHoveredIssueId] = useState<string | null>(null);
 
   const handleIssueClick = (issueId: string) => {
     setActiveIssueId(issueId);
+  };
+
+  const handleIssueHover = (issueId: string | null) => {
+    setHoveredIssueId(issueId);
   };
 
   return (
@@ -33,12 +38,19 @@ const ContractReviewPage: React.FC = () => {
         <div className="flex gap-4 h-[calc(100vh-200px)]">
           {/* Contract document - 60% width */}
           <div className="w-3/5">
-            <ContractDocument activeIssueId={activeIssueId} />
+            <ContractDocument 
+              activeIssueId={activeIssueId} 
+              hoveredIssueId={hoveredIssueId}
+            />
           </div>
           
           {/* Issues sidebar - 40% width */}
           <div className="w-2/5">
-            <IssuesSidebar onIssueClick={handleIssueClick} activeIssueId={activeIssueId} />
+            <IssuesSidebar 
+              onIssueClick={handleIssueClick} 
+              activeIssueId={activeIssueId}
+              onIssueHover={handleIssueHover}
+            />
           </div>
         </div>
       </main>
