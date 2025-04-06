@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { issuesData } from '../data/issuesData';
 import { ThumbsUp, ThumbsDown, Play, Check, ChevronDown, ChevronRight } from 'lucide-react';
@@ -170,10 +169,8 @@ const IssueCard: React.FC<IssueCardProps> = ({
 };
 
 const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssueId, onIssueHover }) => {
-  // Track resolved issues
   const [resolvedIssues, setResolvedIssues] = useState<string[]>([]);
 
-  // Handler for resolving/unresolving issues
   const handleResolveIssue = (issueId: string, resolved: boolean) => {
     if (resolved) {
       setResolvedIssues(prev => [...prev, issueId]);
@@ -182,21 +179,13 @@ const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssue
     }
   };
 
-  // Group issues by risk level
   const highRiskIssues = issuesData.filter(issue => issue.riskLevel === 'high');
   const mediumRiskIssues = issuesData.filter(issue => issue.riskLevel === 'medium');
   const lowRiskIssues = issuesData.filter(issue => issue.riskLevel === 'low');
 
   return (
-    <div className="bg-slate-50 h-full overflow-hidden flex flex-col rounded-lg shadow-md">
-      <div className="bg-slate-800 p-4 text-white">
-        <h2 className="text-lg font-semibold">Contract Issues</h2>
-        <p className="text-sm text-slate-300">
-          {issuesData.length} issues identified in this document, {resolvedIssues.length} resolved
-        </p>
-      </div>
-      
-      <div className="flex-1 overflow-y-auto p-4">
+    <div className="h-full overflow-auto">
+      <div className="p-4">
         {highRiskIssues.length > 0 && (
           <div className="mb-4">
             <h3 className="text-sm font-medium text-slate-900 mb-2">High Risk Issues</h3>
