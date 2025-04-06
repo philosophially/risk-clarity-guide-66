@@ -19,7 +19,7 @@ const ContractDocument: React.FC<ContractDocumentProps> = ({ activeIssueId, hove
         setTimeout(() => {
           if (containerRef.current) {
             const elementTop = element.offsetTop;
-            containerRef.current.scrollTop = elementTop - 100; // Add some padding at the top
+            containerRef.current.scrollTop = elementTop - 200; // Increased padding to 200px (100px extra)
           }
         }, 100);
       }
