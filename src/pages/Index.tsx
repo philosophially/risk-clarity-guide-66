@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import ContractDocument from '@/components/ContractDocument';
-import IssuesSidebar from '@/components/IssuesSidebar';
+import IssuesSidebar from '@/components/issues/IssuesSidebar';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { issuesData } from '../data/issuesData';
 

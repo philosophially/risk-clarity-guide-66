@@ -1,9 +1,8 @@
+
 import React, { useState } from 'react';
-import { issuesData } from '../data/issuesData';
-import { ThumbsUp, ThumbsDown, Play, Check, ChevronDown, ChevronRight } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Check, ChevronDown, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { 
   Accordion, 
   AccordionContent, 
@@ -11,21 +10,18 @@ import {
   AccordionTrigger 
 } from '@/components/ui/accordion';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { issuesData } from '../../data/issuesData';
+
+type IssueType = typeof issuesData[0];
 
 interface IssueCardProps {
-  issue: typeof issuesData[0];
+  issue: IssueType;
   onClick: (issueId: string) => void;
   activeIssueId: string | null;
   onResolve: (issueId: string, resolved: boolean) => void;
   isResolved: boolean;
   onMouseEnter: (issueId: string) => void;
   onMouseLeave: () => void;
-}
-
-interface IssuesSidebarProps {
-  onIssueClick: (issueId: string) => void;
-  activeIssueId: string | null;
-  onIssueHover: (issueId: string | null) => void;
 }
 
 const IssueCard: React.FC<IssueCardProps> = ({ 
@@ -39,7 +35,6 @@ const IssueCard: React.FC<IssueCardProps> = ({
 }) => {
   const [thumbsUpActive, setThumbsUpActive] = useState(false);
   const [thumbsDownActive, setThumbsDownActive] = useState(false);
-  const [playbookVisible, setPlaybookVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState(!isResolved);
   
   const handleResolve = () => {
@@ -55,14 +50,6 @@ const IssueCard: React.FC<IssueCardProps> = ({
   const handleThumbsDown = () => {
     setThumbsDownActive(true);
     setThumbsUpActive(false);
-  };
-
-  const togglePlaybook = () => {
-    setPlaybookVisible(!playbookVisible);
-  };
-
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
   };
 
   const handleIssueClick = (e: React.MouseEvent) => {
@@ -168,80 +155,4 @@ const IssueCard: React.FC<IssueCardProps> = ({
   );
 };
 
-const IssuesSidebar: React.FC<IssuesSidebarProps> = ({ onIssueClick, activeIssueId, onIssueHover }) => {
-  const [resolvedIssues, setResolvedIssues] = useState<string[]>([]);
-
-  const handleResolveIssue = (issueId: string, resolved: boolean) => {
-    if (resolved) {
-      setResolvedIssues(prev => [...prev, issueId]);
-    } else {
-      setResolvedIssues(prev => prev.filter(id => id !== issueId));
-    }
-  };
-
-  const highRiskIssues = issuesData.filter(issue => issue.riskLevel === 'high');
-  const mediumRiskIssues = issuesData.filter(issue => issue.riskLevel === 'medium');
-  const lowRiskIssues = issuesData.filter(issue => issue.riskLevel === 'low');
-
-  return (
-    <div className="h-full overflow-auto">
-      <div className="p-4">
-        {highRiskIssues.length > 0 && (
-          <div className="mb-4">
-            <h3 className="text-sm font-medium text-slate-900 mb-2">High Risk Issues</h3>
-            {highRiskIssues.map(issue => (
-              <IssueCard 
-                key={issue.id} 
-                issue={issue} 
-                onClick={onIssueClick}
-                activeIssueId={activeIssueId}
-                onResolve={handleResolveIssue}
-                isResolved={resolvedIssues.includes(issue.id)}
-                onMouseEnter={(issueId) => onIssueHover(issueId)}
-                onMouseLeave={() => onIssueHover(null)}
-              />
-            ))}
-          </div>
-        )}
-        
-        {mediumRiskIssues.length > 0 && (
-          <div className="mb-4">
-            <h3 className="text-sm font-medium text-slate-900 mb-2">Medium Risk Issues</h3>
-            {mediumRiskIssues.map(issue => (
-              <IssueCard 
-                key={issue.id} 
-                issue={issue} 
-                onClick={onIssueClick}
-                activeIssueId={activeIssueId}
-                onResolve={handleResolveIssue}
-                isResolved={resolvedIssues.includes(issue.id)}
-                onMouseEnter={(issueId) => onIssueHover(issueId)}
-                onMouseLeave={() => onIssueHover(null)}
-              />
-            ))}
-          </div>
-        )}
-        
-        {lowRiskIssues.length > 0 && (
-          <div className="mb-4">
-            <h3 className="text-sm font-medium text-slate-900 mb-2">Low Risk Issues</h3>
-            {lowRiskIssues.map(issue => (
-              <IssueCard 
-                key={issue.id} 
-                issue={issue} 
-                onClick={onIssueClick}
-                activeIssueId={activeIssueId}
-                onResolve={handleResolveIssue}
-                isResolved={resolvedIssues.includes(issue.id)}
-                onMouseEnter={(issueId) => onIssueHover(issueId)}
-                onMouseLeave={() => onIssueHover(null)}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default IssuesSidebar;
+export default IssueCard;
