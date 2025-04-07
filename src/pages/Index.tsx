@@ -53,20 +53,20 @@ const ContractReviewPage: React.FC = () => {
           {/* Issues sidebar - 40% width */}
           <div className="w-2/5">
             <div className="bg-slate-50 h-full overflow-hidden flex flex-col rounded-lg shadow-md">
-              <div className="bg-slate-800 p-4 text-white">
-                <div className="flex justify-between items-center">
-                  <h2 className="text-lg font-semibold">Contract Issues</h2>
-                  <TabsList className="bg-slate-700">
-                    <TabsTrigger value="issues" className="data-[state=active]:bg-blue-600">Issues</TabsTrigger>
-                    <TabsTrigger value="playbook" className="data-[state=active]:bg-blue-600">Playbook</TabsTrigger>
-                  </TabsList>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+                <div className="bg-slate-800 p-4 text-white">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-lg font-semibold">Contract Issues</h2>
+                    <TabsList className="bg-slate-700">
+                      <TabsTrigger value="issues" className="data-[state=active]:bg-blue-600">Issues</TabsTrigger>
+                      <TabsTrigger value="playbook" className="data-[state=active]:bg-blue-600">Playbook</TabsTrigger>
+                    </TabsList>
+                  </div>
+                  <p className="text-sm text-slate-300">
+                    {issuesData.length} issues identified in this document
+                  </p>
                 </div>
-                <p className="text-sm text-slate-300">
-                  {issuesData.length} issues identified in this document
-                </p>
-              </div>
 
-              <Tabs defaultValue="issues" value={activeTab} onValueChange={setActiveTab} className="w-full h-full overflow-hidden flex flex-col">
                 <TabsContent value="issues" className="flex-1 p-0 m-0 overflow-hidden">
                   <IssuesSidebar 
                     onIssueClick={handleIssueClick} 
