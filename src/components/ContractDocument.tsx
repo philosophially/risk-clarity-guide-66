@@ -1,7 +1,7 @@
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { contractContent } from '../data/contractData';
-import { ScrollArea } from "@/components/ui/scroll-area";
+import DocumentToolbar from './DocumentToolbar';
 
 interface ContractDocumentProps {
   activeIssueId: string | null;
@@ -10,6 +10,31 @@ interface ContractDocumentProps {
 
 const ContractDocument: React.FC<ContractDocumentProps> = ({ activeIssueId, hoveredIssueId }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [zoom, setZoom] = useState<number>(1);
+  const [activeFormats, setActiveFormats] = useState<{
+    bold: boolean;
+    italic: boolean;
+    underline: boolean;
+  }>({
+    bold: false,
+    italic: false,
+    underline: false,
+  });
+  
+  const handleZoomIn = () => {
+    setZoom(prev => Math.min(prev + 0.1, 2)); // Max zoom: 200%
+  };
+
+  const handleZoomOut = () => {
+    setZoom(prev => Math.max(prev - 0.1, 0.5)); // Min zoom: 50%
+  };
+
+  const handleFormatText = (format: 'bold' | 'italic' | 'underline') => {
+    setActiveFormats(prev => ({
+      ...prev,
+      [format]: !prev[format]
+    }));
+  };
   
   useEffect(() => {
     if (activeIssueId && containerRef.current) {
@@ -35,13 +60,32 @@ const ContractDocument: React.FC<ContractDocumentProps> = ({ activeIssueId, hove
     return '';
   };
 
+  // Compute document style classes based on active formats
+  const documentStyleClasses = () => {
+    const classes = ['contract-content'];
+    if (activeFormats.bold) classes.push('font-bold');
+    if (activeFormats.italic) classes.push('italic');
+    if (activeFormats.underline) classes.push('underline');
+    return classes.join(' ');
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md h-full overflow-hidden">
+    <div className="bg-white rounded-lg shadow-md h-full overflow-hidden flex flex-col">
+      <DocumentToolbar 
+        onZoomIn={handleZoomIn}
+        onZoomOut={handleZoomOut}
+        onFormatText={handleFormatText}
+        zoom={zoom}
+      />
+      
       <div 
-        className="h-full overflow-y-auto p-8" 
+        className="flex-1 overflow-y-auto p-8" 
         ref={containerRef}
       >
-        <div className="max-w-3xl mx-auto contract-content">
+        <div 
+          className={`max-w-3xl mx-auto ${documentStyleClasses()}`}
+          style={{ transform: `scale(${zoom})`, transformOrigin: 'top center', transition: 'transform 0.2s ease-out' }}
+        >
           <h1 className="text-2xl font-bold mb-6 text-slate-900">MASTER SERVICES AGREEMENT</h1>
           
           {/* Render the contract content from the data */}
