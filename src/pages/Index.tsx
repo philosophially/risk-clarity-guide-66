@@ -43,7 +43,7 @@ const ContractReviewPage: React.FC = () => {
 
         <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-200px)]">
           {/* Contract document - 60% width on large screens */}
-          <div className="w-full lg:w-3/5">
+          <div className="w-full lg:w-3/5 h-full">
             <ContractDocument 
               activeIssueId={activeIssueId} 
               hoveredIssueId={hoveredIssueId}
@@ -51,28 +51,28 @@ const ContractReviewPage: React.FC = () => {
           </div>
           
           {/* Issues sidebar - 40% width on large screens */}
-          <div className="w-full lg:w-2/5 no-print">
+          <div className="w-full lg:w-2/5 h-full no-print">
             <div className="bg-m3-surface h-full overflow-hidden flex flex-col rounded-xl m3-elevation-2">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-                <div className="bg-m3-primary p-4 text-m3-onPrimary">
+                <div className="bg-[#1C2235] p-4 text-white">
                   <div className="flex justify-between items-center">
                     <h2 className="text-lg font-medium">Contract Issues</h2>
-                    <TabsList className="bg-m3-primaryContainer">
+                    <TabsList className="bg-[#1C2235]">
                       <TabsTrigger 
                         value="issues" 
-                        className="data-[state=active]:bg-m3-primary data-[state=active]:text-m3-onPrimary"
+                        className="data-[state=active]:bg-blue-500 data-[state=active]:text-white"
                       >
                         Issues
                       </TabsTrigger>
                       <TabsTrigger 
                         value="playbook" 
-                        className="data-[state=active]:bg-m3-primary data-[state=active]:text-m3-onPrimary"
+                        className="data-[state=active]:bg-blue-500 data-[state=active]:text-white"
                       >
                         Playbook
                       </TabsTrigger>
                     </TabsList>
                   </div>
-                  <p className="text-sm text-m3-onPrimary opacity-80">
+                  <p className="text-sm text-white opacity-80">
                     {issuesData.length} issues identified in this document
                   </p>
                 </div>
