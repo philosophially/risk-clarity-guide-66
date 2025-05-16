@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,6 +19,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['Roboto', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -61,6 +65,36 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Material 3 color tokens
+				m3: {
+					primary: '#6750A4',
+					onPrimary: '#FFFFFF',
+					primaryContainer: '#EADDFF',
+					onPrimaryContainer: '#21005E',
+					secondary: '#625B71',
+					onSecondary: '#FFFFFF',
+					secondaryContainer: '#E8DEF8',
+					onSecondaryContainer: '#1E192B',
+					tertiary: '#7D5260',
+					onTertiary: '#FFFFFF',
+					tertiaryContainer: '#FFD8E4',
+					onTertiaryContainer: '#370B1E',
+					error: '#B3261E',
+					onError: '#FFFFFF',
+					errorContainer: '#F9DEDC',
+					onErrorContainer: '#410E0B',
+					background: '#FFFBFE',
+					onBackground: '#1C1B1F',
+					surface: '#FFFBFE',
+					onSurface: '#1C1B1F',
+					surfaceVariant: '#E7E0EC',
+					onSurfaceVariant: '#49454F',
+					outline: '#79747E',
+					shadow: '#000000',
+					inverseSurface: '#313033',
+					inverseOnSurface: '#F4EFF4',
+					inversePrimary: '#D0BCFF',
 				}
 			},
 			borderRadius: {

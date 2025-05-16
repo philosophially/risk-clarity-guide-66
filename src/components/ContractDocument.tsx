@@ -70,7 +70,7 @@ const ContractDocument: React.FC<ContractDocumentProps> = ({ activeIssueId, hove
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md h-full overflow-hidden flex flex-col">
+    <div className="bg-m3-surface rounded-xl m3-elevation-2 h-full overflow-hidden flex flex-col">
       <DocumentToolbar 
         onZoomIn={handleZoomIn}
         onZoomOut={handleZoomOut}
@@ -86,7 +86,7 @@ const ContractDocument: React.FC<ContractDocumentProps> = ({ activeIssueId, hove
           className={`max-w-3xl mx-auto ${documentStyleClasses()}`}
           style={{ transform: `scale(${zoom})`, transformOrigin: 'top center', transition: 'transform 0.2s ease-out' }}
         >
-          <h1 className="text-2xl font-bold mb-6 text-slate-900">MASTER SERVICES AGREEMENT</h1>
+          <h1 className="text-2xl font-medium mb-6 text-m3-onSurface">MASTER SERVICES AGREEMENT</h1>
           
           {/* Render the contract content from the data */}
           {contractContent.map((section) => (
