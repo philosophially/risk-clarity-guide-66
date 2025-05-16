@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import ContractDocument from '@/components/ContractDocument';
 import IssuesSidebar from '@/components/issues/IssuesSidebar';
+import PlaybookList from '@/components/issues/PlaybookList';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { issuesData } from '../data/issuesData';
 
@@ -20,6 +21,11 @@ const ContractReviewPage: React.FC = () => {
 
   // Find the active issue data for the playbook
   const activeIssue = issuesData.find(issue => issue.id === activeIssueId);
+
+  // Filter issues by risk level
+  const highRiskIssues = issuesData.filter(issue => issue.riskLevel === 'high');
+  const mediumRiskIssues = issuesData.filter(issue => issue.riskLevel === 'medium');
+  const lowRiskIssues = issuesData.filter(issue => issue.riskLevel === 'low');
 
   return (
     <div className="min-h-screen bg-m3-background font-sans">
@@ -86,23 +92,23 @@ const ContractReviewPage: React.FC = () => {
                 </TabsContent>
                 
                 <TabsContent value="playbook" className="flex-1 p-0 m-0 overflow-auto">
-                  <div className="p-6">
-                    {activeIssue ? (
+                  <div className="p-4">
+                    {activeIssueId ? (
                       <div>
-                        <h2 className="text-xl font-medium text-m3-onSurface mb-2">{activeIssue.title}</h2>
-                        <span className={`risk-badge-${activeIssue.riskLevel} mb-4 inline-block`}>
-                          {activeIssue.riskLevel === 'high' ? 'High Risk' : activeIssue.riskLevel === 'medium' ? 'Medium Risk' : 'Low Risk'}
+                        <h2 className="text-xl font-medium text-m3-onSurface mb-2">{activeIssue?.title}</h2>
+                        <span className={`risk-badge-${activeIssue?.riskLevel} mb-4 inline-block`}>
+                          {activeIssue?.riskLevel === 'high' ? 'High Risk' : activeIssue?.riskLevel === 'medium' ? 'Medium Risk' : 'Low Risk'}
                         </span>
                         <div className="mb-6">
                           <h3 className="text-sm font-medium text-m3-onSurfaceVariant mb-1">Issue Summary</h3>
-                          <p className="text-m3-onSurface mb-2">{activeIssue.summary}</p>
-                          <p className="text-xs text-m3-onSurfaceVariant">{activeIssue.location}</p>
+                          <p className="text-m3-onSurface mb-2">{activeIssue?.summary}</p>
+                          <p className="text-xs text-m3-onSurfaceVariant">{activeIssue?.location}</p>
                         </div>
                         
                         <div className="mb-6">
                           <h3 className="text-sm font-medium text-m3-onSurfaceVariant mb-2">Playbook Position</h3>
                           <div className="bg-m3-primaryContainer p-4 rounded-lg text-m3-onPrimaryContainer">
-                            <p className="text-sm">{activeIssue.playbookPosition}</p>
+                            <p className="text-sm">{activeIssue?.playbookPosition}</p>
                           </div>
                         </div>
                         
@@ -114,8 +120,27 @@ const ContractReviewPage: React.FC = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="text-center py-12">
-                        <p className="text-m3-onSurfaceVariant">Select an issue to view playbook details</p>
+                      <div className="space-y-4">
+                        <PlaybookList
+                          issues={highRiskIssues}
+                          title="High Risk Recommended Actions"
+                          activeIssueId={activeIssueId}
+                          onIssueClick={handleIssueClick}
+                        />
+                        
+                        <PlaybookList
+                          issues={mediumRiskIssues}
+                          title="Medium Risk Recommended Actions"
+                          activeIssueId={activeIssueId}
+                          onIssueClick={handleIssueClick}
+                        />
+                        
+                        <PlaybookList
+                          issues={lowRiskIssues}
+                          title="Low Risk Recommended Actions"
+                          activeIssueId={activeIssueId}
+                          onIssueClick={handleIssueClick}
+                        />
                       </div>
                     )}
                   </div>
