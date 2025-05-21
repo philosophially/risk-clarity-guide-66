@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import ContractDocument from '@/components/ContractDocument';
 import IssuesSidebar from '@/components/issues/IssuesSidebar';
 import PlaybookList from '@/components/issues/PlaybookList';
